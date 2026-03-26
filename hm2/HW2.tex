@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%
+% Page Layout
+%%%%%%%%%%%%%%%%%%%
+
+\setlength{\paperwidth}{8.5in} \setlength{\paperheight}{11in}
+\setlength{\marginparwidth}{0in} \setlength{\marginparsep}{0in}
+\setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Include Packages and Style Files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+\usepackage{datetime}
+\usepackage{booktabs}
+\usepackage{hyperref}
+%\usepackage[pdftex]{graphicx,color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{remark}{Remark}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Define new commands
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\R}{\mathbb{R}}
+
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbf{E}}
+\newcommand{\1}[1]{\mathbf{1} \left \{ #1 \right \}}
+
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Var}{\operatorname{Var}}
+
+\newcommand{\mb}[1]{\mathbf{#1}}
+
+
+\begin{document}
+
+\title{Math 6020, Spring 2026 \\ Homework 2 }
+\date{Due: Wednesday, February 25th (before midnight)}
+
+
+\maketitle
+
+These questions require implementing methods for linear discriminant analysis in \texttt{R}. For a good exposition of how to do this see
+\begin{center}
+	\url{https://rstudio-pubs-static.s3.amazonaws.com/35817_2552e05f1d4e4db8ba87b334101a43da.html}
+\end{center}
+There is also a file called \texttt{discriminant analysis.r} on Canvas that contains most of the relevant commands. You can modify them to answer the first two questions.
+
+\begin{enumerate}
+	
+	\item Install the \texttt{MASS} package in \texttt{R}, which has a built in function called \texttt{lda} for linear discriminant analysis. Type \texttt{?lda} to bring up the help file, and read it to understand how the \texttt{lda} function works.
+	
+	\item In \texttt{R} use the commands \texttt{install.packages("boot")} and then \texttt{data("urine", package="boot")} to download urine analysis data for 77 patients. You can find documentation on this data set at 
+	\begin{center}
+		\url{https://stat.ethz.ch/R-manual/R-devel/library/boot/html/urine.html}
+	\end{center}
+	Note that it consists of 79 rows and 7 columns. The first column is categorical (indicates if calcium oxalate crystals were found in the urine or not), while the remaining six are numerical. Note that rows 1 and 55 each have a missing entry in them (recorded as an NA). Delete these rows entirely.
+	\begin{enumerate}[(a)]
+		\item Use the \texttt{lda} function to compute the linear discriminant for the remaining data set of 77 points. What appears to be the dominant feature in the discriminant?
+		\item Now normalize each variable by dividing by the within-group standard deviation (recall the within-group variance of each variable can be calculated from the diagonal of $\widehat{\Sigma} = \frac{1}{N-2} \sum_{i=1}^2\sum_{j=1}^{n_i} (x_{i,j} - \bar{x}_i) (x_{i,j} - \bar{x}_i)^T$). Repeat part (a). Have the dominant features in the discriminant changed?
+		\item Use the \texttt{predict} function to compute the linear discriminants for the 77 data points. The output has a \texttt{class} function that tells you the predicted value of each data point (i.e. the prediction of whether it does or does not have crystals). What percentage of data points are predicted correctly? 
+		\item Use the \texttt{ldahist} function to plot a stacked histogram of the two linear discriminant values, grouped according to the presence or absence of crystals. Do the points seem to be well separated by this linear discriminant?
+	\end{enumerate}
+	
+	\item Recall the rootstock data of Table 6.2 from Rencher. You can find the data under Files on CANVAS. For each of six different apple tree rootstocks, eight offshoots had four different measurements taken. This means the data has 48 rows, and each row consists of 4 columns. Let's see what the four columns produce as discriminant functions. This means we will be trying to classify points in four-dimensional space as one of six different types. We have 48 points in total, eight for each of the six different rootstocks.
+	
+	\begin{enumerate}[(i)]
+		\item Use the \texttt{lda} function to compute the linear discriminants of the ``type'' variable against the four numerical variables (you can get rid of the first column if you want, it is only the observation number). How many do you get?
+		\item Make a scatterplot of the first two linear discriminants for each of the 48 observations, and then label the points according to the actual type. Do the points seem well-separated? 
+		\item After you called the \texttt{predict} function to compute the discriminant values, the produced object has an attribute called \texttt{class} which tells you the predicted type of each observation based on the discriminants. What percentage of the 48 observations did the discriminants correctly classify? Is this better than random guessing? 
+		\item Take a look at the eigenvalues of this LDA; you can access these by calling the svd ouput, e.g. lambda \texttt{fit\$svd\textasciicircum 2} if fit is the LDA object you created previously. What are the eigenvalues? What percentage of the separation between the means are you seeing in the 2d scatterplot you created in (ii)?
+	\end{enumerate}
+	
+\end{enumerate}
+
+
+
+\end{document}
